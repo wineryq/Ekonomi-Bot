@@ -1,0 +1,3 @@
+﻿BOTU SATMAYA ÇALIŞMAK / SATMAK YASAKTIR
+
+destek için .gg/vsc
