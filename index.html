@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mine Hosting - wineryy</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #1a1a1a, #0a1d37);
+            color: #e0e7ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 1200px;
+            position: relative;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 184, 148, 0.7);
+        }
+        .auth-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .auth-box input, .auth-box textarea {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1em;
+            color: #1e3c72;
+            transition: all 0.3s;
+        }
+        .auth-box input:focus, .auth-box textarea:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+        }
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #00b894, #00d4b8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: linear-gradient(45deg, #009875, #00b894);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+        .btn.reject {
+            background: linear-gradient(45deg, #e74c3c, #ff5555);
+        }
+        .btn.reject:hover {
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+        }
+        .switch-link {
+            font-size: 0.9em;
+            color: #a0d4ff;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        .switch-link:hover {
+            color: #fff;
+        }
+        .content {
+            display: none;
+            margin-top: 40px;
+        }
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 35px;
+            cursor: pointer;
+            color: #fff;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+        .hamburger:hover {
+            transform: rotate(90deg);
+        }
+        .menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #0a1d37);
+            color: #fff;
+            padding: 80px 20px 20px;
+            transition: right 0.4s ease;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+        }
+        .menu.active {
+            right: 0;
+        }
+        .menu a, .menu button {
+            display: block;
+            padding: 15px;
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 1.2em;
+            border-radius: 8px;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        .menu a:hover, .menu button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+        }
+        .hidden {
+            display: none;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 184, 148, 0.9);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+        }
+        .notification.error {
+            background: rgba(231, 76, 60, 0.9);
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+        .loader {
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #00d4b8;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+        .packages {
+            margin-top: 20px;
+        }
+        .package {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .package:hover {
+            transform: translateY(-5px);
+        }
+        .package h3 {
+            margin: 0;
+            color: #00d4b8;
+            font-size: 1.4em;
+        }
+        .package p {
+            margin: 5px 0;
+        }
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #ff5555;
+        }
+        .new-price {
+            color: #00d4b8;
+            font-weight: bold;
+        }
+        .dashboard .package {
+            background: rgba(0, 184, 148, 0.1);
+        }
+        .dashboard .pending-purchases {
+            margin-top: 20px;
+        }
+        .pending-purchases .package {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .profile-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #00d4b8;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(0, 184, 148, 0.7);
+        }
+        .default-pic {
+            background: #1e3c72;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        /* Admin Paneli Tasarımı */
+        #admin {
+            background: linear-gradient(135deg, #1e3c72, #0a1d37);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #admin h2 {
+            font-size: 2.5em;
+            color: #00d4b8;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+        }
+        .admin-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .admin-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.3);
+        }
+        .admin-section h3 {
+            color: #fff;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00d4b8;
+            padding-bottom: 10px;
+        }
+        .admin-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .admin-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.02);
+        }
+        .admin-item p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .admin-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .admin-btn.approve {
+            background: linear-gradient(45deg, #00b894, #00d4b8);
+        }
+        .admin-btn.approve:hover {
+            background: linear-gradient(45deg, #009875, #00b894);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.5);
+        }
+        .admin-btn.reject {
+            background: linear-gradient(45deg, #e74c3c, #ff5555);
+        }
+        .admin-btn.reject:hover {
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5);
+        }
+        .admin-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: rgba(0, 184, 148, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            width: 30%;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .stat-box:hover {
+            background: rgba(0, 184, 148, 0.2);
+            transform: translateY(-5px);
+        }
+        .stat-box h4 {
+            color: #00d4b8;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .stat-box p {
+            font-size: 2em;
+            color: #fff;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="loading" id="loading"><div class="loader"></div></div>
+
+    <div class="profile-container" id="profileContainer">
+        <img src="" class="profile-pic hidden" id="profilePic" alt="Profile Picture">
+        <div class="profile-pic default-pic hidden" id="defaultPic"></div>
+    </div>
+
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="menu" id="menu">
+        <a href="#" onclick="showSectionWithLoading('home')">Ana Sayfa</a>
+        <a href="#" onclick="showSectionWithLoading('servers')">Sunucular</a>
+        <a href="#" onclick="showSectionWithLoading('dashboard')">Panel</a>
+        <a href="#" onclick="showSectionWithLoading('support')">Destek</a>
+        <a href="#" onclick="showSectionWithLoading('changePassword')">Şifre Değiştir</a>
+        <a href="#" id="discordLink" onclick="connectDiscord()">Discord ile Bağlan</a>
+        <a href="#" onclick="showSectionWithLoading('admin')" id="adminLink" class="hidden">Yetkili Panel</a>
+        <button class="btn hidden" id="logoutBtn" onclick="logout()">Çıkış Yap</button>
+    </div>
+
+    <div class="container">
+        <div class="notification" id="notification"></div>
+
+        <div class="auth-box" id="loginSection">
+            <h1>Giriş Yap</h1>
+            <input type="text" id="loginUsername" placeholder="Discord isminizi girin" required>
+            <input type="password" id="loginPassword" placeholder="Şifre" required>
+            <button class="btn" onclick="login()">Giriş Yap</button>
+            <button class="btn" onclick="discordLogin()">Discord ile Giriş Yap</button>
+            <p class="switch-link" onclick="showRegister()">Kayıt Ol</p>
+        </div>
+
+        <div class="auth-box hidden" id="registerSection">
+            <h1>Kayıt Ol</h1>
+            <input type="text" id="regUsername" placeholder="Discord isminizi girin (En az 3 karakter)" required>
+            <input type="password" id="regPassword" placeholder="Şifre (En az 8 hane, 1 büyük harf)" required>
+            <input type="password" id="regPasswordConfirm" placeholder="Şifreyi Tekrar Gir" required>
+            <button class="btn" onclick="register()">Kayıt Ol</button>
+            <button class="btn" onclick="discordRegister()">Discord ile Kayıt Ol</button>
+            <p class="switch-link" onclick="showLogin()">Giriş Yap</p>
+        </div>
+
+        <div class="auth-box hidden" id="changePasswordSection">
+            <h1>Şifre Değiştir</h1>
+            <input type="password" id="currentPassword" placeholder="Mevcut Şifre" required>
+            <input type="password" id="newPassword" placeholder="Yeni Şifre (En az 8 hane, 1 büyük harf)" required>
+            <input type="password" id="newPasswordConfirm" placeholder="Yeni Şifreyi Tekrar Gir" required>
+            <button class="btn" onclick="changePassword()">Şifreyi Değiştir</button>
+            <p class="switch-link" onclick="showSectionWithLoading('dashboard')">Panele Dön</p>
+        </div>
+
+        <div class="content" id="contentSection">
+            <h1>Hoş geldiniz, <span id="currentUser"></span>!</h1>
+
+            <div id="home" class="section">
+                <h2>Mine Hosting - wineryy Nedir?</h2>
+                <p>Yüksek performanslı sanal sunucularla projelerinizi hayata geçirin!</p>
+            </div>
+
+            <div id="servers" class="section hidden">
+                <h2>VDS Kiralık Paketleri</h2>
+                <div class="packages">
+                    <div class="package">
+                        <div>
+                            <h3>MH-1 Ryzen 9 7950x3d</h3>
+                            <p>2 Çekirdek CPU, 4GB DDR5 RAM, 40 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">150 TL/aylık</span>
+                            <span class="new-price">130 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-1', '130')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-2 Ryzen 9 7950x3d</h3>
+                            <p>2 Çekirdek CPU, 6GB DDR5 RAM, 45 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">270 TL/aylık</span>
+                            <span class="new-price">250 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-2', '250')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-3 Ryzen 9 7950x3d</h3>
+                            <p>3 Çekirdek CPU, 8GB DDR5 RAM, 80 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">340 TL/aylık</span>
+                            <span class="new-price">320 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-3', '320')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-4 Ryzen 9 7950x3d</h3>
+                            <p>3 Çekirdek CPU, 12GB DDR5 RAM, 120 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">530 TL/aylık</span>
+                            <span class="new-price">510 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-4', '510')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-5 Ryzen 9 7950x3d</h3>
+                            <p>6 Çekirdek CPU, 16GB DDR5 RAM, 180 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">720 TL/aylık</span>
+                            <span class="new-price">700 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-5', '700')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-6 Ryzen 9 7950x3d</h3>
+                            <p>6 Çekirdek CPU, 20GB DDR5 RAM, 200 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">910 TL/aylık</span>
+                            <span class="new-price">890 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-6', '890')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-7 Ryzen 9 7950x3d</h3>
+                            <p>8 Çekirdek CPU, 24GB DDR5 RAM, 240 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">1100 TL/aylık</span>
+                            <span class="new-price">1080 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-7', '1080')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-8 Ryzen 9 7950x3d</h3>
+                            <p>8 Çekirdek CPU, 32GB DDR5 RAM, 320 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">1480 TL/aylık</span>
+                            <span class="new-price">1460 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-8', '1460')">Satın Al</button>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div>
+                            <h3>MH-9 Ryzen 9 7950x3d</h3>
+                            <p>16 Çekirdek CPU, 64GB DDR5 RAM, 480 GB Datacenter SSD, Limitsiz Trafik</p>
+                        </div>
+                        <div class="price-container">
+                            <span class="old-price">2950 TL/aylık</span>
+                            <span class="new-price">2930 TL/aylık</span>
+                            <button class="btn" onclick="purchase('MH-9', '2930')">Satın Al</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard" class="section hidden">
+                <h2>Kullanıcı Paneli</h2>
+                <p>Aktif Sunucularınız:</p>
+                <div id="activeServers">
+                    <p>Henüz onaylanmış sunucu yok.</p>
+                </div>
+                <div class="pending-purchases">
+                    <h3>Bekleyen Satın Almalar</h3>
+                    <div id="pendingPurchases"></div>
+                </div>
+            </div>
+
+            <div id="support" class="section hidden">
+                <h2>Destek Talebi</h2>
+                <input type="text" id="supportSubject" placeholder="Konu">
+                <textarea id="supportMessage" rows="5" placeholder="Mesajınız"></textarea>
+                <button class="btn" onclick="sendSupport()">Gönder</button>
+            </div>
+
+            <div id="admin" class="section hidden">
+                <h2>Yetkili Kontrol Merkezi - wineryy</h2>
+                <div class="admin-stats">
+                    <div class="stat-box">
+                        <h4>Toplam Kullanıcı</h4>
+                        <p id="totalUsers">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Bekleyen Sipariş</h4>
+                        <p id="pendingOrders">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Destek Talebi</h4>
+                        <p id="supportCount">0</p>
+                    </div>
+                </div>
+                <div class="admin-section">
+                    <h3>Kullanıcı Yönetimi</h3>
+                    <div id="userList"></div>
+                </div>
+                <div class="admin-section">
+                    <h3>Destek Talepleri</h3>
+                    <div id="supportTickets"></div>
+                </div>
+                <div class="admin-section">
+                    <h3>Bekleyen Siparişler</h3>
+                    <div id="adminPendingPurchases"></div>
+                </div>
+            </div>
+
+            <div id="changePassword" class="section hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem('users')) || {};
+        let currentUser = null;
+        let activeServers = JSON.parse(localStorage.getItem('activeServers')) || {};
+        let pendingPurchases = JSON.parse(localStorage.getItem('pendingPurchases')) || {};
+        let supportTickets = JSON.parse(localStorage.getItem('supportTickets')) || [];
+        let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
+        let discordAvatar = null;
+        const adminUsername = "wineryy";
+        const webhookURL = "https://discord.com/api/webhooks/1353001879898165360/ghTyhQVUARrhKj91vV9q5Ud0xQaGJepel1aX4Ib-U_KBSqfxwMHID5jhkhHtl7CJNmes";
+
+        window.onload = function() {
+            const loggedInUser = localStorage.getItem('currentUser');
+            if (loggedInUser) {
+                currentUser = loggedInUser;
+                discordAvatar = localStorage.getItem('discordAvatar');
+                if (bannedUsers.includes(currentUser)) {
+                    alert("Bu hesaba erişim engellenmiştir!");
+                    logout();
+                    return;
+                }
+                showContent();
+                updateDashboard();
+                updateProfilePicture();
+            }
+            handleDiscordCallback();
+            updateMenu();
+        };
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+            setTimeout(() => document.getElementById('loading').style.display = 'none', 1000);
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.toggle('error', isError);
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 3000);
+        }
+
+        function sendToDiscord(message) {
+            fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: message })
+            }).catch(() => showNotification("Discord’a gönderim başarısız!", true));
+        }
+
+        function showRegister() {
+            showLoading();
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('registerSection').classList.remove('hidden');
+            document.getElementById('changePasswordSection').classList.add('hidden');
+            document.getElementById('contentSection').style.display = 'none';
+        }
+
+        function showLogin() {
+            showLoading();
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('changePasswordSection').classList.add('hidden');
+            document.getElementById('contentSection').style.display = 'none';
+        }
+
+        function updateProfilePicture() {
+            const profilePic = document.getElementById('profilePic');
+            const defaultPic = document.getElementById('defaultPic');
+            
+            if (discordAvatar && localStorage.getItem('discordConnected')) {
+                profilePic.src = discordAvatar;
+                profilePic.classList.remove('hidden');
+                defaultPic.classList.add('hidden');
+            } else {
+                defaultPic.textContent = currentUser ? currentUser.charAt(0).toUpperCase() : 'U';
+                defaultPic.classList.remove('hidden');
+                profilePic.classList.add('hidden');
+            }
+        }
+
+        function showContent() {
+            showLoading();
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('changePasswordSection').classList.add('hidden');
+            document.getElementById('contentSection').style.display = 'block';
+            document.getElementById('currentUser').textContent = currentUser; // Burada wineryy yerine currentUser
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            if (currentUser === adminUsername) {
+                document.getElementById('adminLink').classList.remove('hidden');
+            } else {
+                document.getElementById('adminLink').classList.add('hidden');
+            }
+            showSection('home');
+            updateMenu();
+            updateProfilePicture();
+        }
+
+        function register() {
+            showLoading();
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+            if (username.length < 3 || password.length < 8 || !/[A-Z]/.test(password) || password !== passwordConfirm) {
+                showNotification("Geçersiz bilgiler!", true);
+                return;
+            }
+            if (users[username]) {
+                showNotification("Bu Discord ismi alınmış!", true);
+                return;
+            }
+            users[username] = password;
+            localStorage.setItem('users', JSON.stringify(users));
+            showNotification("Kayıt başarılı!");
+            sendToDiscord(`Yeni Kullanıcı Kaydı - wineryy\n**Kullanıcı:** ${username}\n**Tarih:** ${new Date().toLocaleString()}`);
+            showLogin();
+        }
+
+        function discordRegister() {
+            showLoading();
+            const username = document.getElementById('regUsername').value;
+            if (!username || username.length < 3) {
+                showNotification("Geçerli bir Discord ismi girin!", true);
+                return;
+            }
+            if (users[username]) {
+                showNotification("Bu Discord ismi alınmış!", true);
+                return;
+            }
+            const tempPassword = "DiscordPass" + Math.random().toString(36).slice(2, 10);
+            users[username] = tempPassword;
+            localStorage.setItem('users', JSON.stringify(users));
+            currentUser = username;
+            localStorage.setItem('currentUser', currentUser);
+            showNotification("Discord ile kayıt tamamlandı!");
+            sendToDiscord(`Yeni Discord Kullanıcı Kaydı - wineryy\n**Kullanıcı:** ${username}\n**Tarih:** ${new Date().toLocaleString()}`);
+            showContent();
+        }
+
+        function login() {
+            showLoading();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (bannedUsers.includes(username)) {
+                showNotification("Bu hesap yasaklı!", true);
+                return;
+            }
+            if (users[username] === password) {
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                showContent();
+            } else {
+                showNotification("Hatalı giriş!", true);
+            }
+        }
+
+        function discordLogin() {
+            showLoading();
+            const username = document.getElementById('loginUsername').value;
+            if (bannedUsers.includes(username)) {
+                showNotification("Bu hesap yasaklı!", true);
+                return;
+            }
+            if (users[username]) {
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                showNotification("Discord ile giriş yapıldı!");
+                showContent();
+            } else {
+                showNotification("Bu Discord ismi kayıtlı değil!", true);
+            }
+        }
+
+        function logout() {
+            showLoading();
+            currentUser = null;
+            discordAvatar = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('discordConnected');
+            localStorage.removeItem('discordAvatar');
+            document.getElementById('adminLink').classList.add('hidden');
+            showLogin();
+            showNotification("Çıkış yapıldı.");
+            updateProfilePicture();
+        }
+
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('active');
+        }
+
+        function showSectionWithLoading(sectionId) {
+            showLoading();
+            setTimeout(() => showSection(sectionId), 1000);
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            if (sectionId === 'changePassword') {
+                document.getElementById('changePasswordSection').classList.remove('hidden');
+                document.getElementById('contentSection').style.display = 'block';
+            } else {
+                document.getElementById('changePasswordSection').classList.add('hidden');
+            }
+            document.getElementById('menu').classList.remove('active');
+            if (sectionId === 'dashboard') updateDashboard();
+            if (sectionId === 'admin' && currentUser === adminUsername) updateAdminPanel();
+        }
+
+        function purchase(packageName, price) {
+            showLoading();
+            if (!currentUser) {
+                showNotification("Giriş yapmalısınız!", true);
+                return;
+            }
+            if (bannedUsers.includes(currentUser)) {
+                showNotification("Yasaklı kullanıcılar satın alma yapamaz!", true);
+                return;
+            }
+            if (!pendingPurchases[currentUser]) pendingPurchases[currentUser] = [];
+            const purchaseData = { 
+                name: packageName, 
+                price: price, 
+                date: new Date().toLocaleString(), 
+                approved: false, 
+                rejected: false 
+            };
+            pendingPurchases[currentUser].push(purchaseData);
+            localStorage.setItem('pendingPurchases', JSON.stringify(pendingPurchases));
+            sendPurchaseToDiscord(purchaseData);
+            showNotification("Satın alma isteği kaydedildi. Yetkili onayını bekliyor.");
+            updateDashboard();
+            if (currentUser === adminUsername && !document.getElementById('admin').classList.contains('hidden')) {
+                updateAdminPanel();
+            }
+        }
+
+        function sendPurchaseToDiscord(purchase) {
+            const isDiscordUser = localStorage.getItem('discordConnected') === 'true';
+            const message = `Yeni Satın Alma İsteği - wineryy\n` +
+                            `**Kullanıcı:** ${currentUser}\n` +
+                            `**Paket:** ${purchase.name}\n` +
+                            `**Fiyat:** ₺${purchase.price}\n` +
+                            `**Tarih:** ${purchase.date}\n` +
+                            `**Hesap Türü:** ${isDiscordUser ? 'Discord Bağlı' : 'Normal'}\n` +
+                            `Yetkili panelden onay bekleniyor.`;
+            sendToDiscord(message);
+        }
+
+        function updateDashboard() {
+            const serversDiv = document.getElementById('activeServers');
+            const pendingDiv = document.getElementById('pendingPurchases');
+
+            if (activeServers[currentUser] && activeServers[currentUser].length > 0) {
+                serversDiv.innerHTML = activeServers[currentUser].map(server => 
+                    `<div class="package">
+                        <h3>${server.name}</h3>
+                        <p>Fiyat: ₺${server.price}/ay</p>
+                        <p>Tarih: ${server.date}</p>
+                    </div>`
+                ).join('');
+            } else {
+                serversDiv.innerHTML = '<p>Henüz onaylanmış sunucu yok.</p>';
+            }
+
+            if (pendingPurchases[currentUser] && pendingPurchases[currentUser].length > 0) {
+                pendingDiv.innerHTML = pendingPurchases[currentUser].map(purchase => 
+                    `<div class="package">
+                        <h3>${purchase.name} (${purchase.approved ? 'Onaylandı' : purchase.rejected ? 'Reddedildi' : 'Bekliyor'})</h3>
+                        <p>Fiyat: ₺${purchase.price}/ay</p>
+                        <p>Tarih: ${purchase.date}</p>
+                    </div>`
+                ).join('');
+            } else {
+                pendingDiv.innerHTML = '<p>Bekleyen satın alma yok.</p>';
+            }
+        }
+
+        function sendSupport() {
+            showLoading();
+            const subject = document.getElementById('supportSubject').value;
+            const message = document.getElementById('supportMessage').value;
+            if (!subject || !message) {
+                showNotification("Konu ve mesaj gerekli!", true);
+                return;
+            }
+            supportTickets.push({ user: currentUser, subject, message, date: new Date().toLocaleString() });
+            localStorage.setItem('supportTickets', JSON.stringify(supportTickets));
+            showNotification("Destek talebi gönderildi!");
+            document.getElementById('supportSubject').value = '';
+            document.getElementById('supportMessage').value = '';
+            if (currentUser === adminUsername) updateAdminPanel();
+        }
+
+        function changePassword() {
+            showLoading();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const newPasswordConfirm = document.getElementById('newPasswordConfirm').value;
+
+            if (users[currentUser] !== currentPassword || newPassword !== newPasswordConfirm || newPassword.length < 8 || !/[A-Z]/.test(newPassword)) {
+                showNotification("Şifre değişikliği başarısız!", true);
+                return;
+            }
+            users[currentUser] = newPassword;
+            localStorage.setItem('users', JSON.stringify(users));
+            showNotification("Şifre değiştirildi!");
+            showSectionWithLoading('dashboard');
+        }
+
+        function updateMenu() {
+            const discordConnected = localStorage.getItem('discordConnected');
+            const discordLink = document.getElementById('discordLink');
+            if (discordConnected) {
+                discordLink.textContent = "Bağlandı";
+                discordLink.removeAttribute('onclick');
+                discordLink.style.cursor = 'default';
+                discordLink.style.opacity = '0.7';
+            } else {
+                discordLink.textContent = "Discord ile Bağlan";
+                discordLink.setAttribute('onclick', 'connectDiscord()');
+                discordLink.style.cursor = 'pointer';
+                discordLink.style.opacity = '1';
+            }
+        }
+
+        function connectDiscord() {
+            if (localStorage.getItem('discordConnected')) return;
+            showLoading();
+            const clientId = "1353026194286575668";
+            const redirectUri = encodeURIComponent("https://winery.neocities.com");
+            const scope = encodeURIComponent("identify email");
+            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+            window.location.href = discordAuthUrl;
+        }
+
+        function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                showLoading();
+                const clientId = "1353026194286575668";
+                const clientSecret = "5n7CD3m74G5t7DMhHt3qxI7xc3LIat3a";
+                const redirectUri = "https://winery.neocities.com";
+
+                fetch("https://discord.com/api/oauth2/token", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.access_token) {
+                        fetch("https://discord.com/api/users/@me", {
+                            headers: { "Authorization": `Bearer ${data.access_token}` }
+                        })
+                        .then(response => response.json())
+                        .then(user => {
+                            const username = `${user.username}#${user.discriminator}`;
+                            if (bannedUsers.includes(username)) {
+                                showNotification("Bu hesap yasaklı!", true);
+                                return;
+                            }
+                            discordAvatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+                            if (!users[username]) {
+                                users[username] = "DiscordPass" + Math.random().toString(36).slice(2, 10);
+                                localStorage.setItem('users', JSON.stringify(users));
+                                sendToDiscord(`Yeni Discord Kullanıcı Kaydı (OAuth) - wineryy\n**Kullanıcı:** ${username}\n**Tarih:** ${new Date().toLocaleString()}`);
+                            }
+                            currentUser = username;
+                            localStorage.setItem('currentUser', username);
+                            localStorage.setItem('discordConnected', 'true');
+                            localStorage.setItem('discordAvatar', discordAvatar);
+                            showNotification("Discord hesabınız bağlandı!");
+                            showContent();
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        })
+                        .catch(() => showNotification("Kullanıcı bilgileri alınamadı!", true));
+                    } else {
+                        showNotification("Discord bağlantısı başarısız!", true);
+                    }
+                })
+                .catch(() => showNotification("Bağlantı hatası!", true));
+            }
+        }
+
+        // Admin Panel Functions
+        function updateAdminPanel() {
+            if (currentUser !== adminUsername) {
+                showNotification("Bu bölüme erişim yetkiniz yok!", true);
+                showSection('dashboard');
+                return;
+            }
+
+            // İstatistikler
+            document.getElementById('totalUsers').textContent = Object.keys(users).length;
+            let pendingCount = 0;
+            Object.keys(pendingPurchases).forEach(user => {
+                pendingCount += pendingPurchases[user].filter(p => !p.approved && !p.rejected).length;
+            });
+            document.getElementById('pendingOrders').textContent = pendingCount;
+            document.getElementById('supportCount').textContent = supportTickets.length;
+
+            // User List
+            const userListDiv = document.getElementById('userList');
+            userListDiv.innerHTML = Object.keys(users).map(username => 
+                `<div class="admin-item">
+                    <div>
+                        <p><strong>Kullanıcı:</strong> ${username}</p>
+                        <p><strong>Şifre:</strong> ${users[username]}</p>
+                        <p><strong>Durum:</strong> ${bannedUsers.includes(username) ? 'Yasaklı' : 'Aktif'}</p>
+                    </div>
+                    <div class="admin-buttons">
+                        ${bannedUsers.includes(username) 
+                            ? `<button class="admin-btn approve" onclick="unbanUser('${username}')">Yasağı Kaldır</button>`
+                            : `<button class="admin-btn reject" onclick="banUser('${username}')">Yasakla</button>`}
+                    </div>
+                </div>`
+            ).join('');
+
+            // Support Tickets
+            const supportTicketsDiv = document.getElementById('supportTickets');
+            supportTicketsDiv.innerHTML = supportTickets.length > 0 ? supportTickets.map((ticket, index) => 
+                `<div class="admin-item">
+                    <div>
+                        <p><strong>Konu:</strong> ${ticket.subject}</p>
+                        <p><strong>Kullanıcı:</strong> ${ticket.user}</p>
+                        <p><strong>Mesaj:</strong> ${ticket.message}</p>
+                        <p><strong>Tarih:</strong> ${ticket.date}</p>
+                    </div>
+                </div>`
+            ).join('') : '<p>Destek talebi yok.</p>';
+
+            // Pending Purchases
+            const adminPendingDiv = document.getElementById('adminPendingPurchases');
+            let allPending = [];
+            Object.keys(pendingPurchases).forEach(user => {
+                pendingPurchases[user].forEach((purchase, index) => {
+                    if (!purchase.approved && !purchase.rejected) {
+                        allPending.push({ user, purchase, index });
+                    }
+                });
+            });
+            adminPendingDiv.innerHTML = allPending.length > 0 ? allPending.map(item => 
+                `<div class="admin-item">
+                    <div>
+                        <p><strong>Paket:</strong> ${item.purchase.name}</p>
+                        <p><strong>Kullanıcı:</strong> ${item.user}</p>
+                        <p><strong>Fiyat:</strong> ₺${item.purchase.price}/ay</p>
+                        <p><strong>Tarih:</strong> ${item.purchase.date}</p>
+                    </div>
+                    <div class="admin-buttons">
+                        <button class="admin-btn approve" onclick="approvePurchase('${item.user}', ${item.index})">Onayla</button>
+                        <button class="admin-btn reject" onclick="rejectPurchase('${item.user}', ${item.index})">Reddet</button>
+                    </div>
+                </div>`
+            ).join('') : '<p>Bekleyen sipariş yok.</p>';
+        }
+
+        function banUser(username) {
+            if (username === adminUsername) {
+                showNotification("Admin yasaklanamaz!", true);
+                return;
+            }
+            if (!bannedUsers.includes(username)) {
+                bannedUsers.push(username);
+                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+                showNotification(`${username} yasaklandı!`);
+                sendToDiscord(`Kullanıcı Yasaklandı - wineryy\n**Kullanıcı:** ${username}\n**Tarih:** ${new Date().toLocaleString()}`);
+                if (currentUser === username) logout();
+                updateAdminPanel();
+            }
+        }
+
+        function unbanUser(username) {
+            bannedUsers = bannedUsers.filter(user => user !== username);
+            localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+            showNotification(`${username} yasağı kaldırıldı!`);
+            sendToDiscord(`Kullanıcı Yasağı Kaldırıldı - wineryy\n**Kullanıcı:** ${username}\n**Tarih:** ${new Date().toLocaleString()}`);
+            updateAdminPanel();
+        }
+
+        function approvePurchase(username, index) {
+            const purchase = pendingPurchases[username][index];
+            purchase.approved = true;
+            if (!activeServers[username]) activeServers[username] = [];
+            activeServers[username].push(purchase);
+            pendingPurchases[username].splice(index, 1);
+            if (pendingPurchases[username].length === 0) delete pendingPurchases[username];
+            localStorage.setItem('pendingPurchases', JSON.stringify(pendingPurchases));
+            localStorage.setItem('activeServers', JSON.stringify(activeServers));
+            showNotification(`${username} kullanıcısının ${purchase.name} siparişi onaylandı!`);
+            sendToDiscord(`Sipariş Onaylandı - wineryy\n**Kullanıcı:** ${username}\n**Paket:** ${purchase.name}\n**Fiyat:** ₺${purchase.price}\n**Tarih:** ${new Date().toLocaleString()}`);
+            updateAdminPanel();
+            if (currentUser === username) updateDashboard();
+        }
+
+        function rejectPurchase(username, index) {
+            const purchase = pendingPurchases[username][index];
+            purchase.rejected = true;
+            pendingPurchases[username].splice(index, 1);
+            if (pendingPurchases[username].length === 0) delete pendingPurchases[username];
+            localStorage.setItem('pendingPurchases', JSON.stringify(pendingPurchases));
+            showNotification(`${username} kullanıcısının ${purchase.name} siparişi reddedildi!`);
+            sendToDiscord(`Sipariş Reddedildi - wineryy\n**Kullanıcı:** ${username}\n**Paket:** ${purchase.name}\n**Fiyat:** ₺${purchase.price}\n**Tarih:** ${new Date().toLocaleString()}`);
+            updateAdminPanel();
+            if (currentUser === username) updateDashboard();
+        }
+    </script>
+</body>
+</html>
